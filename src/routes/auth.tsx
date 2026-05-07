@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -15,7 +15,7 @@ export const Route = createFileRoute("/auth")({
 
 function AuthPage() {
   const navigate = useNavigate();
-  const [mode, setMode] = useState<"signin" | "signup">("signin");
+  const [mode, setMode] = useState<"signin" | "signup" | "forgot">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
@@ -32,6 +32,13 @@ function AuthPage() {
         if (error) throw error;
         toast.success("Account created! Check your email to verify, then sign in.");
         setMode("signin");
+      } else if (mode === "forgot") {
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: `${window.location.origin}/reset-password`,
+        });
+        if (error) throw error;
+        toast.success("Check your email for a reset link.");
+        setMode("signin");
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
@@ -42,6 +49,14 @@ function AuthPage() {
     } finally {
       setBusy(false);
     }
+  }
+
+  async function google() {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: `${window.location.origin}/` },
+    });
+    if (error) toast.error(error.message);
   }
 
   return (
@@ -60,18 +75,49 @@ function AuthPage() {
               <Label htmlFor="email">Email</Label>
               <Input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" />
             </div>
-            <div>
-              <Label htmlFor="password">Password</Label>
-              <Input id="password" type="password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} autoComplete={mode === "signin" ? "current-password" : "new-password"} />
-            </div>
+            {mode !== "forgot" && (
+              <div>
+                <Label htmlFor="password">Password</Label>
+                <Input id="password" type="password" required minLength={8} value={password} onChange={(e) => setPassword(e.target.value)} autoComplete={mode === "signin" ? "current-password" : "new-password"} />
+              </div>
+            )}
             <Button type="submit" className="w-full bg-gradient-primary text-primary-foreground" disabled={busy}>
-              {busy ? "Please wait…" : mode === "signin" ? "Sign in" : "Create account"}
+              {busy ? "Please wait…" : mode === "signin" ? "Sign in" : mode === "signup" ? "Create account" : "Send reset link"}
             </Button>
           </form>
-          <button onClick={() => setMode(mode === "signin" ? "signup" : "signin")} className="mt-4 w-full text-sm text-muted-foreground hover:text-foreground">
-            {mode === "signin" ? "New here? Create an account" : "Have an account? Sign in"}
-          </button>
+
+          {mode !== "forgot" && (
+            <>
+              <div className="my-4 flex items-center gap-2 text-xs text-muted-foreground">
+                <div className="h-px flex-1 bg-border" /> or <div className="h-px flex-1 bg-border" />
+              </div>
+              <Button type="button" variant="outline" className="w-full" onClick={google}>
+                Continue with Google
+              </Button>
+            </>
+          )}
+
+          <div className="mt-4 flex flex-col gap-2 text-sm text-center">
+            {mode === "signin" && (
+              <>
+                <button onClick={() => setMode("signup")} className="text-muted-foreground hover:text-foreground">New here? Create an account</button>
+                <button onClick={() => setMode("forgot")} className="text-muted-foreground hover:text-foreground">Forgot password?</button>
+              </>
+            )}
+            {mode === "signup" && (
+              <button onClick={() => setMode("signin")} className="text-muted-foreground hover:text-foreground">Have an account? Sign in</button>
+            )}
+            {mode === "forgot" && (
+              <button onClick={() => setMode("signin")} className="text-muted-foreground hover:text-foreground">Back to sign in</button>
+            )}
+          </div>
         </Card>
+
+        <p className="mt-4 text-center text-xs text-muted-foreground">
+          By continuing you agree to our{" "}
+          <Link to="/terms" className="underline">Terms</Link> and{" "}
+          <Link to="/privacy" className="underline">Privacy Policy</Link>.
+        </p>
       </div>
     </div>
   );
