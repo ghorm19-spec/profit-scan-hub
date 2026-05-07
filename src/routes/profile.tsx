@@ -108,6 +108,16 @@ function ProfilePage() {
         </div>
       </Card>
 
+      {!isProUser() && (
+        <Card className="p-4 mt-4 bg-gradient-hero text-primary-foreground border-0">
+          <div className="flex items-center gap-2 font-bold"><Crown className="h-4 w-4" /> Upgrade to Pro</div>
+          <p className="text-sm opacity-90 mt-1">Unlimited scans, batch mode, and price-drop alerts. Free plan: {FREE_SCAN_LIMIT} scans/month.</p>
+          <Button variant="secondary" className="w-full mt-3" onClick={() => toast.info("In-app purchases activate in the native app build.")}>
+            Get Pro
+          </Button>
+        </Card>
+      )}
+
       <Card className="p-2 mt-4">
         <Link to="/privacy" className="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-muted text-sm">
           <Shield className="h-4 w-4 text-muted-foreground" /> Privacy Policy
