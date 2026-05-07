@@ -12,7 +12,8 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/use-session";
 import { REGIONS, formatMoney } from "@/lib/scoreflipp";
-import { LogOut, Trash2, FileText, Shield } from "lucide-react";
+import { LogOut, Trash2, FileText, Shield, Crown } from "lucide-react";
+import { isProUser, FREE_SCAN_LIMIT } from "@/lib/paywall";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/profile")({
