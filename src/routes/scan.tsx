@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { useSession } from "@/hooks/use-session";
 import { supabase } from "@/integrations/supabase/client";
-import { analyzeItem } from "@/server/scan.functions";
+import { analyzeItem } from "@/scan.functions";
 import { detectRegion } from "@/lib/scoreflipp";
 import { toast } from "sonner";
 
