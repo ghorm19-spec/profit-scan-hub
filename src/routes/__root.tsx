@@ -77,10 +77,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "description", content: "Scan any used item and instantly see resale price, profit, demand, and the best marketplace to sell on." },
       { name: "author", content: "Score Flipp" },
       { property: "og:title", content: "Score Flipp — Scan. Flip. Profit." },
-      { property: "og:description", content: "Scan any used item and instantly see resale price, profit, demand, and the best marketplace." },
+      { property: "og:description", content: "Scan any used item and instantly see resale price, profit, demand, and the best marketplace to sell on." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "Score Flipp — Scan. Flip. Profit." },
+      { name: "twitter:description", content: "Scan any used item and instantly see resale price, profit, demand, and the best marketplace to sell on." },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/ce8ce94a-5e50-4271-bd82-4cc6242954d6" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/ce8ce94a-5e50-4271-bd82-4cc6242954d6" },
     ],
     links: [
       {
