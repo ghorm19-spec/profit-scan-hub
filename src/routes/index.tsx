@@ -26,7 +26,12 @@ function HomePage() {
   const [trends, setTrends] = useState<any[]>([]);
 
   useEffect(() => {
-    if (!loading && !user) navigate({ to: "/auth" });
+    if (loading) return;
+    if (typeof window !== "undefined" && !localStorage.getItem("sf_onboarded")) {
+      navigate({ to: "/onboarding" });
+      return;
+    }
+    if (!user) navigate({ to: "/auth" });
   }, [loading, user, navigate]);
 
   useEffect(() => {

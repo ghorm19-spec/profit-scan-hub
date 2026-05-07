@@ -11,7 +11,10 @@ import { useSession } from "@/hooks/use-session";
 import { supabase } from "@/integrations/supabase/client";
 import { analyzeItem } from "@/scan.functions";
 import { detectRegion } from "@/lib/scoreflipp";
+import { getMonthlyUsage, isProUser, FREE_SCAN_LIMIT } from "@/lib/paywall";
 import { toast } from "sonner";
+import { Link } from "@tanstack/react-router";
+import { Crown } from "lucide-react";
 
 export const Route = createFileRoute("/scan")({
   head: () => ({ meta: [{ title: "Scan — Score Flipp" }, { name: "description", content: "Snap a photo to instantly estimate resale value." }] }),
@@ -43,6 +46,14 @@ function ScanPage() {
     }
     setBusy(true);
     try {
+      if (!isProUser()) {
+        const usage = await getMonthlyUsage(user.id);
+        if (usage.capped) {
+          toast.error(`You've used all ${FREE_SCAN_LIMIT} free scans this month. Upgrade to Pro for unlimited scans.`);
+          setBusy(false);
+          return;
+        }
+      }
       const { region, currency } = detectRegion();
       const result = await analyzeItem({
         data: {
