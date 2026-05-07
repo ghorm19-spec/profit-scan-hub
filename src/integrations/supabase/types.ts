@@ -14,7 +14,162 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      category_trends: {
+        Row: {
+          category: string
+          demand: string | null
+          hot_items: string | null
+          id: string
+          region: string | null
+          trend_score: number | null
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          demand?: string | null
+          hot_items?: string | null
+          id?: string
+          region?: string | null
+          trend_score?: number | null
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          demand?: string | null
+          hot_items?: string | null
+          id?: string
+          region?: string | null
+          trend_score?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          currency: string | null
+          display_name: string | null
+          id: string
+          region: string | null
+        }
+        Insert: {
+          created_at?: string
+          currency?: string | null
+          display_name?: string | null
+          id: string
+          region?: string | null
+        }
+        Update: {
+          created_at?: string
+          currency?: string | null
+          display_name?: string | null
+          id?: string
+          region?: string | null
+        }
+        Relationships: []
+      }
+      scans: {
+        Row: {
+          best_for_fast_sale: string | null
+          best_for_highest_price: string | null
+          brand: string | null
+          category: string | null
+          condition_note: string | null
+          confidence: number | null
+          created_at: string
+          currency: string | null
+          demand: string | null
+          est_fees: number | null
+          est_profit: number | null
+          explanation: string | null
+          id: string
+          image_url: string | null
+          item_name: string | null
+          notes: string | null
+          price_high: number | null
+          price_low: number | null
+          recommendation: string | null
+          recommended_marketplace: string | null
+          region: string | null
+          saved: boolean | null
+          scam_risk: string | null
+          sold: boolean | null
+          sold_at: string | null
+          sold_price: number | null
+          time_to_sell: string | null
+          underpriced_alert: boolean | null
+          user_cost: number | null
+          user_id: string
+          watchlisted: boolean | null
+        }
+        Insert: {
+          best_for_fast_sale?: string | null
+          best_for_highest_price?: string | null
+          brand?: string | null
+          category?: string | null
+          condition_note?: string | null
+          confidence?: number | null
+          created_at?: string
+          currency?: string | null
+          demand?: string | null
+          est_fees?: number | null
+          est_profit?: number | null
+          explanation?: string | null
+          id?: string
+          image_url?: string | null
+          item_name?: string | null
+          notes?: string | null
+          price_high?: number | null
+          price_low?: number | null
+          recommendation?: string | null
+          recommended_marketplace?: string | null
+          region?: string | null
+          saved?: boolean | null
+          scam_risk?: string | null
+          sold?: boolean | null
+          sold_at?: string | null
+          sold_price?: number | null
+          time_to_sell?: string | null
+          underpriced_alert?: boolean | null
+          user_cost?: number | null
+          user_id: string
+          watchlisted?: boolean | null
+        }
+        Update: {
+          best_for_fast_sale?: string | null
+          best_for_highest_price?: string | null
+          brand?: string | null
+          category?: string | null
+          condition_note?: string | null
+          confidence?: number | null
+          created_at?: string
+          currency?: string | null
+          demand?: string | null
+          est_fees?: number | null
+          est_profit?: number | null
+          explanation?: string | null
+          id?: string
+          image_url?: string | null
+          item_name?: string | null
+          notes?: string | null
+          price_high?: number | null
+          price_low?: number | null
+          recommendation?: string | null
+          recommended_marketplace?: string | null
+          region?: string | null
+          saved?: boolean | null
+          scam_risk?: string | null
+          sold?: boolean | null
+          sold_at?: string | null
+          sold_price?: number | null
+          time_to_sell?: string | null
+          underpriced_alert?: boolean | null
+          user_cost?: number | null
+          user_id?: string
+          watchlisted?: boolean | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
