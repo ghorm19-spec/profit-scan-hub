@@ -1,14 +1,19 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { MobileShell } from "@/components/MobileShell";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/use-session";
 import { REGIONS, formatMoney } from "@/lib/scoreflipp";
-import { LogOut } from "lucide-react";
+import { LogOut, Trash2, FileText, Shield, Crown } from "lucide-react";
+import { isProUser, FREE_SCAN_LIMIT } from "@/lib/paywall";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/profile")({
@@ -21,6 +26,7 @@ function ProfilePage() {
   const navigate = useNavigate();
   const [profile, setProfile] = useState<any>(null);
   const [stats, setStats] = useState({ scans: 0, sold: 0, profit: 0 });
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -47,6 +53,21 @@ function ProfilePage() {
   async function logout() {
     await supabase.auth.signOut();
     navigate({ to: "/auth" });
+  }
+
+  async function deleteAccount() {
+    setDeleting(true);
+    try {
+      const { error } = await supabase.functions.invoke("delete-account");
+      if (error) throw error;
+      await supabase.auth.signOut();
+      toast.success("Account deleted");
+      navigate({ to: "/auth" });
+    } catch (e: any) {
+      toast.error(e.message ?? "Could not delete account");
+    } finally {
+      setDeleting(false);
+    }
   }
 
   if (!profile) return <MobileShell><p className="text-muted-foreground">Loading…</p></MobileShell>;
@@ -87,9 +108,50 @@ function ProfilePage() {
         </div>
       </Card>
 
+      {!isProUser() && (
+        <Card className="p-4 mt-4 bg-gradient-hero text-primary-foreground border-0">
+          <div className="flex items-center gap-2 font-bold"><Crown className="h-4 w-4" /> Upgrade to Pro</div>
+          <p className="text-sm opacity-90 mt-1">Unlimited scans, batch mode, and price-drop alerts. Free plan: {FREE_SCAN_LIMIT} scans/month.</p>
+          <Button variant="secondary" className="w-full mt-3" onClick={() => toast.info("In-app purchases activate in the native app build.")}>
+            Get Pro
+          </Button>
+        </Card>
+      )}
+
+      <Card className="p-2 mt-4">
+        <Link to="/privacy" className="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-muted text-sm">
+          <Shield className="h-4 w-4 text-muted-foreground" /> Privacy Policy
+        </Link>
+        <Link to="/terms" className="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-muted text-sm">
+          <FileText className="h-4 w-4 text-muted-foreground" /> Terms of Service
+        </Link>
+      </Card>
+
       <Button variant="outline" className="w-full mt-4" onClick={logout}>
         <LogOut className="h-4 w-4 mr-1.5" />Sign out
       </Button>
+
+      <AlertDialog>
+        <AlertDialogTrigger asChild>
+          <Button variant="ghost" className="w-full mt-2 text-destructive hover:text-destructive hover:bg-destructive/10">
+            <Trash2 className="h-4 w-4 mr-1.5" />Delete account
+          </Button>
+        </AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete your account?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This permanently removes your scans, photos, and profile. This cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={deleteAccount} disabled={deleting} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              {deleting ? "Deleting…" : "Delete forever"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </MobileShell>
   );
 }
