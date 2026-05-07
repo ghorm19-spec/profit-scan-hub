@@ -13,8 +13,6 @@ import { analyzeItem } from "@/scan.functions";
 import { detectRegion } from "@/lib/scoreflipp";
 import { getMonthlyUsage, isProUser, FREE_SCAN_LIMIT } from "@/lib/paywall";
 import { toast } from "sonner";
-import { Link } from "@tanstack/react-router";
-import { Crown } from "lucide-react";
 
 export const Route = createFileRoute("/scan")({
   head: () => ({ meta: [{ title: "Scan — Score Flipp" }, { name: "description", content: "Snap a photo to instantly estimate resale value." }] }),
