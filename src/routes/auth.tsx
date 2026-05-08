@@ -52,11 +52,11 @@ function AuthPage() {
     }
   }
 
-  async function google() {
-    const result = await lovable.auth.signInWithOAuth("google", {
+  async function oauth(provider: "google" | "apple") {
+    const result = await lovable.auth.signInWithOAuth(provider, {
       redirect_uri: `${window.location.origin}/`,
     });
-    if (result?.error) toast.error(result.error.message ?? "Google sign-in failed");
+    if (result?.error) toast.error(result.error.message ?? `${provider} sign-in failed`);
   }
 
   return (
@@ -91,9 +91,14 @@ function AuthPage() {
               <div className="my-4 flex items-center gap-2 text-xs text-muted-foreground">
                 <div className="h-px flex-1 bg-border" /> or <div className="h-px flex-1 bg-border" />
               </div>
-              <Button type="button" variant="outline" className="w-full" onClick={google}>
-                Continue with Google
-              </Button>
+              <div className="space-y-2">
+                <Button type="button" variant="outline" className="w-full" onClick={() => oauth("google")}>
+                  Continue with Google
+                </Button>
+                <Button type="button" variant="outline" className="w-full bg-foreground text-background hover:bg-foreground/90 hover:text-background" onClick={() => oauth("apple")}>
+                  Continue with Apple
+                </Button>
+              </div>
             </>
           )}
 

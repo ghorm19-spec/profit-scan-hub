@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useRef, useState } from "react";
-import { Camera, ImagePlus, Loader2, Sparkles, ArrowLeft } from "lucide-react";
+import { Camera, ImagePlus, Loader2, Sparkles, ArrowLeft, ScanBarcode } from "lucide-react";
 import { MobileShell } from "@/components/MobileShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,6 +26,7 @@ function ScanPage() {
   const camRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [hint, setHint] = useState("");
+  const [barcode, setBarcode] = useState("");
   const [cost, setCost] = useState("");
   const [busy, setBusy] = useState(false);
 
@@ -38,8 +39,8 @@ function ScanPage() {
 
   async function run() {
     if (!user) return navigate({ to: "/auth" });
-    if (!preview && !hint) {
-      toast.error("Add a photo or a quick description");
+    if (!preview && !hint && !barcode) {
+      toast.error("Add a photo, barcode, or quick description");
       return;
     }
     setBusy(true);
@@ -56,7 +57,7 @@ function ScanPage() {
       const result = await analyzeItem({
         data: {
           imageDataUrl: preview ?? undefined,
-          hint: hint || undefined,
+          hint: [hint, barcode ? `UPC/Barcode: ${barcode}` : ""].filter(Boolean).join(" — ") || undefined,
           region, currency,
           userCost: cost ? Number(cost) : undefined,
         },
@@ -137,6 +138,10 @@ function ScanPage() {
           <div>
             <Label htmlFor="hint">What is it? (optional)</Label>
             <Input id="hint" placeholder="e.g. Nike Dunk Low Panda, size 10" value={hint} onChange={(e) => setHint(e.target.value)} />
+          </div>
+          <div>
+            <Label htmlFor="barcode" className="flex items-center gap-1.5"><ScanBarcode className="h-4 w-4" />Barcode / UPC (optional)</Label>
+            <Input id="barcode" inputMode="numeric" placeholder="e.g. 194501423564" value={barcode} onChange={(e) => setBarcode(e.target.value)} />
           </div>
           <div>
             <Label htmlFor="cost">Your cost / asking price (optional)</Label>
