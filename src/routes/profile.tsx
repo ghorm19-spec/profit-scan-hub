@@ -147,29 +147,6 @@ function ProfilePage() {
           <p className="text-sm opacity-90 mt-1">Unlimited scans unlocked. Manage your subscription in your app store settings.</p>
         </Card>
       )}
-        <Card className="p-4 mt-4 bg-gradient-hero text-primary-foreground border-0">
-          <div className="flex items-center gap-2 font-bold"><Crown className="h-4 w-4" /> Upgrade to Pro</div>
-          <p className="text-sm opacity-90 mt-1">Unlimited scans, batch mode, and price-drop alerts. Free plan: {FREE_SCAN_LIMIT} scans/month.</p>
-          <Button variant="secondary" className="w-full mt-3" onClick={() => {
-            localStorage.setItem("sf_pro", "1");
-            toast.success("Pro activated! (In native build this triggers RevenueCat purchase.)");
-            setTimeout(() => window.location.reload(), 600);
-          }}>
-            Get Pro — $4.99/mo
-          </Button>
-        </Card>
-      ) : (
-        <Card className="p-4 mt-4 bg-gradient-success text-success-foreground border-0">
-          <div className="flex items-center gap-2 font-bold"><Crown className="h-4 w-4" /> Pro active</div>
-          <p className="text-sm opacity-90 mt-1">Thanks for supporting Score Flipp. Unlimited scans unlocked.</p>
-          <Button variant="secondary" className="w-full mt-3" onClick={() => {
-            localStorage.removeItem("sf_pro");
-            window.location.reload();
-          }}>
-            Cancel (test)
-          </Button>
-        </Card>
-      )}
 
       <Card className="p-2 mt-4">
         <Link to="/privacy" className="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-muted text-sm">
