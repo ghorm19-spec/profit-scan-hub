@@ -2,7 +2,17 @@
 
 The web app is store-ready. To submit to the Apple App Store or Google Play, wrap it with [Capacitor](https://capacitorjs.com). This must be done on **your own machine** (Lovable's preview can't run native toolchains).
 
+## Optional env vars (set before `bun run build`)
+
+Create a `.env.local` in the project root:
+```
+VITE_REVENUECAT_WEB_KEY=rcb_xxx       # from app.revenuecat.com → Project → API keys → Web Billing
+VITE_SENTRY_DSN=https://xxx@sentry.io/yyy
+```
+Without these, Pro unlocks in test mode (local-only) and Sentry is disabled.
+
 ## 1. One-time setup
+
 
 Clone the project locally (use the GitHub button in Lovable), then:
 
